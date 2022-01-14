@@ -10,9 +10,13 @@ export default class Products extends Component {
     products: []
   }
 
-  fetchProducts = () => {
-    // add call to AWS API Gateway to fetch products here
-    // then set them in state
+  fetchProducts = async() => {
+    try{
+    const result = await axios.get(`${config.api.invokeUrl}/products`);
+    this.setState({ products: result.data});
+    } catch (err) {
+      console.log(`Error occured fetching products: ${err}`);
+    }
   }
 
   componentDidMount = () => {
@@ -33,7 +37,7 @@ export default class Products extends Component {
                   <div className="tile is-4 is-parent  is-vertical">
                     { 
                       this.state.products && this.state.products.length > 0
-                      ? this.state.products.map(product => <Product name={product.productname} id={product.id} key={product.id} />)
+                      ? this.state.products.map(product => <Product name={product.productName} id={product.id} key={product.id} />)
                       : <div className="tile notification is-warning">No products available</div>
                     }
                   </div>
